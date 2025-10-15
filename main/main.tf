@@ -1,4 +1,3 @@
-zing90@penguin:~/springapp/main$ cat main.tf
 # -------------------------------
 # Providers for multi-region
 # -------------------------------
