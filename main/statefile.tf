@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket  = "github-terraform-bucket"
+    bucket  = "github-terraform-bucketz"
     key     = "infra.tfstate"
     region  = "ap-south-1"
     profile = "default"
