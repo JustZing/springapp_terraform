@@ -123,7 +123,11 @@ module "rds" {
   alb_security_group_id = module.security_group[each.key].alb_security_group_id
   secure_subnet_az1_id  = module.vpc[each.key].secure_subnet_az1_id
   secure_subnet_az2_id  = module.vpc[each.key].secure_subnet_az2_id
+
+  db_username           = var.db_username   # new
+  db_password           = var.db_password   # new
 }
+
 
 # -------------------------------
 # Auto Scaling Group Module
