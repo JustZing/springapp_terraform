@@ -1,59 +1,61 @@
-name: Terraform Multi-Region Deployment
+name: Terraform Multi-Region Infrastructure Deployment
 
 on:
   push:
     branches:
-      - feature/devops-pipeline
+      - devops-pipeline
   workflow_dispatch:
 
 env:
-  TF_VERSION: 1.5.7
-  TF_WORKING_DIR: ./main  # Your main module folder
+  TF_VERSION: 1.6.2
+  WORKING_DIR: ./main
 
 jobs:
   terraform:
     name: Terraform Apply Multi-Region
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
 
     steps:
       # 1️⃣ Checkout repository
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       # 2️⃣ Setup Terraform
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      # 3️⃣ Configure AWS credentials (GitHub Secrets)
+      # 3️⃣ Configure AWS credentials (use ap-south-1 as default entrypoint)
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # No default region needed, Terraform handles aliases
+          aws-region: ap-south-1
 
       # 4️⃣ Terraform Init
       - name: Terraform Init
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform init -input=false
 
-      # 5️⃣ Terraform Plan
+      # 5️⃣ Terraform Validate
+      - name: Terraform Validate
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform validate
+
+      # 6️⃣ Terraform Plan
       - name: Terraform Plan
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform plan -input=false -out=tfplan
 
-      # 6️⃣ Terraform Apply
+      # 7️⃣ Terraform Apply
       - name: Terraform Apply
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform apply -input=false -auto-approve tfplan
 
-      # 7️⃣ Terraform Output
+      # 8️⃣ Terraform Output
       - name: Terraform Output
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform output
 
