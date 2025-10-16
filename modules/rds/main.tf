@@ -1,4 +1,3 @@
-# Data source: Availability Zones
 data "aws_availability_zones" "available_zones" {}
 
 # Security Group for RDS
