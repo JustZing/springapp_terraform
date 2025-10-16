@@ -2,8 +2,9 @@ name: Terraform Multi-Region Deployment
 
 on:
   push:
-    branches:
+    branches: 
       - feature/devops-pipeline
+      - main
   workflow_dispatch:
 
 env:
